@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     private float wallJumpCooldown;
     private float horizontalInput;
 
+    [Header("SFX")]
+    [SerializeField] private AudioClip jumpSound;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -52,24 +55,25 @@ public class PlayerController : MonoBehaviour
                 rb.gravityScale = 0;
             }
             else
-            {
                 rb.gravityScale = 5.5f;
-            }
+
             if (Input.GetKey(KeyCode.Space))
             {
                 Jump();
+
+                if (Input.GetKeyDown(KeyCode.Space) && isGrounded())
+                    SoundManager.instance.PlaySound(jumpSound);
             }
         }
         else
-        {
             wallJumpCooldown += Time.deltaTime;
-        }
     }
 
     private void Jump()
     {
         if (isGrounded())
         {
+            SoundManager.instance.PlaySound(jumpSound);
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
             anim.SetTrigger("jump");
         }
@@ -103,7 +107,7 @@ public class PlayerController : MonoBehaviour
 
     public bool canAttack()
     {
-        return horizontalInput == 0 && isGrounded() && !onWall();
+        return isGrounded() && !onWall();
     }
 
 }
