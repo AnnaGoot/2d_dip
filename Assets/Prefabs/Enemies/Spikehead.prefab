@@ -173,9 +173,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   slashSound: {fileID: 8300000, guid: c4a7b8047da5a8744a986d7d66051bb4, type: 3}
-  speed: 1
+  speed: 2
   range: 8
-  checkDelay: 1
+  checkDelay: 0.7
   playerLayer:
     serializedVersion: 2
     m_Bits: 256

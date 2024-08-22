@@ -25,6 +25,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (UIManager.Instance.IsPauseOrVictoryScreenActive())
+            return;
+
         horizontalInput = Input.GetAxis("Horizontal");
 
         //flip character while moving

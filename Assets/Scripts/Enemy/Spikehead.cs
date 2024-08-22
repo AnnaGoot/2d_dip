@@ -14,20 +14,32 @@ public class Spikehead : EnemyDamage
 
     private Vector3[] directions = new Vector3[4];
 
+    private Health playerHealth;
+
     private void OnEnable()
     {
         Stop();
     }
 
+    private void Start()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+            playerHealth = player.GetComponent<Health>();
+    }
+
     private void Update()
     {
-        if (attacking)
-            transform.Translate(destination * Time.deltaTime * speed);
-        else
+        if (playerHealth != null && !playerHealthIsDead())
         {
-            checkTimer += Time.deltaTime;
-            if (checkTimer > checkDelay)
-                CheckForPlayer();
+            if (attacking)
+                transform.Translate(destination * Time.deltaTime * speed);
+            else
+            {
+                checkTimer += Time.deltaTime;
+                if (checkTimer > checkDelay)
+                    CheckForPlayer();
+            }
         }
     }
 
@@ -39,7 +51,7 @@ public class Spikehead : EnemyDamage
             Debug.DrawRay(transform.position, directions[i], Color.red);
             RaycastHit2D hit = Physics2D.Raycast(transform.position, directions[i], range, playerLayer);
 
-            if (hit.collider != null && !attacking)
+            if (hit.collider != null && !attacking && playerHealth != null && !playerHealthIsDead())
             {
                 attacking = true;
                 destination = directions[i];
@@ -66,6 +78,11 @@ public class Spikehead : EnemyDamage
     {
         base.OnTriggerEnter2D(collision);
         Stop();
+    }
+
+    private bool playerHealthIsDead()
+    {
+        return playerHealth != null && playerHealth.currentHealth <= 0;
     }
 }
 
