@@ -29,7 +29,7 @@ public class PlayerRespawn : MonoBehaviour
         //Move Camera to checkpoint
         Camera.main.GetComponent<CameraController>().MoveToNewRoom(currentCheckpoint.parent);
         //Activate Room
-        currentCheckpoint.GetComponentInParent<Room>().ActivateRoon(true);
+        currentCheckpoint.GetComponentInParent<Room>().ActivateRoom(true);
     }
 
     //Activaye Checkpoint

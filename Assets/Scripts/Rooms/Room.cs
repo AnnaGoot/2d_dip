@@ -15,7 +15,7 @@ public class Room : MonoBehaviour
         }
     }
 
-    public void ActivateRoon(bool _status)
+    public void ActivateRoom(bool _status)
     {
         for (int i = 0; i < enemies.Length; i++)
         {
