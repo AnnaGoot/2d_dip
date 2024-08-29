@@ -60,11 +60,11 @@ public class PlayerController : MonoBehaviour
             else
                 rb.gravityScale = 5.5f;
 
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                Jump();
-
-                if (Input.GetKeyDown(KeyCode.Space) && isGrounded())
+                if (!onWall() || horizontalInput != 0)
+                    Jump();
+                if (isGrounded())
                     SoundManager.instance.PlaySound(jumpSound);
             }
         }
@@ -82,13 +82,15 @@ public class PlayerController : MonoBehaviour
         }
         else if (onWall() && !isGrounded())
         {
+            int direction = transform.localScale.x > 0 ? -1 : 1;
+
             if (horizontalInput == 0)
             {
-                rb.velocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 10, 0);
-                transform.localScale = new Vector3(-Mathf.Sign(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                rb.velocity = new Vector2(direction * 10, jumpPower);
+                transform.localScale = new Vector3(-direction, transform.localScale.y, transform.localScale.z);
             }
             else
-                rb.velocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
+                rb.velocity = new Vector2(direction * 3, 6);
 
             wallJumpCooldown = 0;
 
@@ -104,7 +106,8 @@ public class PlayerController : MonoBehaviour
 
     private bool onWall()
     {
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
-        return raycastHit.collider != null;
+        RaycastHit2D raycastHitLeft = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.left, 0.1f, wallLayer);
+        RaycastHit2D raycastHitRight = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.right, 0.1f, wallLayer);
+        return raycastHitLeft.collider != null || raycastHitRight.collider != null;
     }
 }
